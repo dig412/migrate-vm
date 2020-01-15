@@ -1,0 +1,13 @@
+FROM centos:centos6
+RUN yum -y update && yum -y install perl perl-core gcc expat-devel
+RUN cpan App::cpanminus
+RUN cpanm -n -q pp
+RUN rpm -i http://repo.openfusion.net/centos6-i386//perl-Net-SSLeay-1.54-1.of.el6.i686.rpm
+RUN rpm -i http://repo.openfusion.net/centos6-i386//perl-IO-Socket-SSL-1.92-1.of.el6.noarch.rpm
+
+WORKDIR /root
+
+ADD cpanfile .
+RUN cpanm -n -q --installdeps .
+ADD . .
+RUN ./build.sh
